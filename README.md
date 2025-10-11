@@ -36,7 +36,7 @@ docker build -t graphql-testing .
 # 2) Run the server on port 4000
 docker run --rm -p 4000:4000 graphql-testing
 
-# 3) Query it (in a second terminal)
+# 3) Query it 
 Use postman and import two files into postman
 
 # Expected JSON:
