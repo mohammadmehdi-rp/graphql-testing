@@ -6,6 +6,7 @@ A tiny, **production-like** GraphQL service with **thorough tests** and **Docker
 # Pull The Image And Run
 - docker pull rajabpourshirazy/graphql-testing:graphql-testing
 - docker run --rm -p 4000:4000 <dockerhub-username>/graphql-testing:1.0.0
+- docker run --rm -p 4000:4000 rajabpourshirazy/graphql-testing:graphql-testing npm test
 
 ## What you get
 - **GraphQL API** with one query and one mutation
