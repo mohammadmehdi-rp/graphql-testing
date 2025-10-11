@@ -3,7 +3,7 @@
 
 A tiny, **production-like** GraphQL service with **thorough tests** and **Dockerization**.
 
-# Pull The Image, Build And Run
+# Pull The Image And Run
 - docker pull rajabpourshirazy/graphql-testing:graphql-testing
 - docker run --rm -p 4000:4000 <dockerhub-username>/graphql-testing:1.0.0
 
