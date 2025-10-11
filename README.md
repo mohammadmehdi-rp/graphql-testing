@@ -1,18 +1,13 @@
 
 # GraphQL Testing (Dockerized, with Jest)
 
-A tiny, **production-like** GraphQL service with **thorough tests** and **Dockerization**. Perfect for a Software Design course: minimal moving parts, crystal-clear structure, and exact procedures.
-
----
+A tiny, **production-like** GraphQL service with **thorough tests** and **Dockerization**.
 
 ## What you get
 - **GraphQL API** with one query and one mutation
 - **Integration tests** (Jest + Supertest)
 - **Dockerfile** and **docker-compose.yml**
 - **Step-by-step commands** to run and test locally and in Docker
-- Lots of comments for teaching
-
----
 
 ## Project Structure
 ```
@@ -21,25 +16,15 @@ A tiny, **production-like** GraphQL service with **thorough tests** and **Docker
 ├── docker-compose.yml
 ├── .dockerignore
 ├── package.json
-├── README.md  ← (this file)
+├── README.md  
 ├── src
-│   ├── app.js         ← builds the Express + Apollo app (no network bind)
+│   ├── app.js         ← builds the Express + Apollo app 
 │   ├── resolvers.js   ← business logic
-│   ├── schema.js      ← GraphQL schema (SDL)
-│   └── server.js      ← starts the HTTP server (binds PORT)
+│   ├── schema.js      ← GraphQL schema
+│   └── server.js      ← starts the HTTP server 
 └── __tests__
     └── graphql.test.js
 ```
-
----
-
-## Prerequisites (only if running locally without Docker)
-- Node.js **>= 20**
-- npm **>= 9**
-
-> If you use Docker, you don’t need Node installed locally.
-
----
 
 ## Quickstart (with Docker)
 
@@ -59,33 +44,6 @@ curl -X POST http://localhost:4000/graphql   -H 'Content-Type: application/json'
 # 4) Run the tests inside Docker (no local Node needed)
 docker run --rm graphql-testing npm test
 ```
-
-### Using docker-compose (optional, same behavior)
-```bash
-# Start the app
-docker compose up --build app
-# Run tests (separate service)
-docker compose run --rm test
-```
-
----
-
-## Quickstart (locally, without Docker)
-```bash
-# 1) Install dependencies
-npm ci
-
-# 2) Start the server on port 4000
-npm start
-
-# 3) Run tests
-npm test
-
-# 4) Try a query
-curl -X POST http://localhost:4000/graphql   -H 'Content-Type: application/json'   -d '{"query":"{ hello }"}'
-```
-
----
 
 ## GraphQL: example queries & mutations
 
@@ -118,15 +76,11 @@ mutation($a: Int!, $b: Int!) {
 { "data": { "add": 7 } }
 ```
 
----
-
-## Teaching Notes
+## Notes
 - The app is created in **`src/app.js`** so tests can import an **in-memory Express app** without binding a port.
 - The **GraphQL schema** is tiny but complete: a Query and a Mutation.
 - **Integration tests** hit the real `/graphql` endpoint (via Supertest), which is the closest to how clients will use the service.
 - The Docker image intentionally includes dev dependencies so the same image can run tests. In a real prod build you might use multi-stage builds.
-
----
 
 ## Files
 
@@ -135,26 +89,77 @@ mutation($a: Int!, $b: Int!) {
 
 > **Why `--experimental-vm-modules`?** Apollo Server v4 is ESM-only. This flag ensures Jest can run ESM smoothly across Node versions. With newer Jest/Node it may not be required, but it’s the most portable for a course.
 
----
-
-## Verification checklist (for graders)
+## Verification checklist 
 - [ ] `docker build` succeeds without warnings
 - [ ] `docker run -p 4000:4000` serves `OK` at `/` and GraphQL at `/graphql`
 - [ ] `curl` example returns expected JSON
 - [ ] `docker run … npm test` passes all tests
 - [ ] Changing the resolver (e.g., `version`) reflects in responses and tests
 
----
-
 ## Troubleshooting
 - **Port already in use**: change `PORT` env var, e.g. `docker run -e PORT=5000 -p 5000:5000 graphql-testing`.
 - **Jest + ESM quirks**: the `--experimental-vm-modules` flag in `npm test` handles most environments. If you still see ESM errors, ensure Node >= 20.
-- **Windows path issues**: prefer Docker or WSL2 for a uniform environment.
 
----
+## Assignment
+Add a **`ping`** field that always returns **`"pong"`**, plus one integration test. This verifies schema editing, resolver wiring, and test workflow.
 
-## Extension ideas (assignments)
-- Add a `Book` type with `id`, `title`, `author` and implement `books` query
-- Validate inputs in `add` (e.g., forbid negatives) and write a failing test first (TDD)
-- Add GitHub Actions CI to run `npm test` on pull requests
-- Mount a volume in `docker-compose` for hot reloading with `npm run dev`
+### Files to edit
+- `src/schema.js`
+- `src/resolvers.js`
+- `__tests__/graphql.test.js`
+
+### Steps
+
+**Update the schema** (`src/schema.js`)
+```diff
+ export const typeDefs = /* GraphQL */ `
+   type Query {
+     hello: String!
+     version: String!
++    ping: String!
+   }
+
+   type Mutation {
+     add(a: Int!, b: Int!): Int!
+   }
+ ```
+
+**Add the resolver (src/resolvers.js)**
+```diff
+ export const resolvers = {
+   Query: {
+     hello: () => "Hello, world!",
+     version: () => "1.0.0",
++    ping: () => "pong",
+   },
+   Mutation: {
+     add: (_parent, { a, b }) => a + b,
+   },
+ };
+```
+
+**Add one test (__tests__/graphql.test.js)**
+```diff
+test("ping returns pong", async () => {
+  const res = await request(app)
+    .post("/graphql")
+    .send({ query: "{ ping }" })
+    .expect(200);
+
+  expect(res.body.data.ping).toBe("pong");
+});
+```
+**Run & verify**
+```diff
+docker build -t graphql-testing .
+docker run --rm -p 4000:4000 graphql-testing
+
+# New query
+curl -X POST http://localhost:4000/graphql \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"{ ping }"}'
+# Expected: { "data": { "ping": "pong" } }
+
+# Tests
+docker run --rm graphql-testing npm test
+```
