@@ -98,9 +98,9 @@ mutation($a: Int!, $b: Int!) {
 ## Verification checklist 
 - [ ] `docker build` succeeds without warnings
 - [ ] `docker run -p 4000:4000` serves `OK` at `/` and GraphQL at `/graphql`
-- [ ] `curl` example returns expected JSON
-- [ ] `docker run … npm test` passes all tests
-- [ ] Changing the resolver (e.g., `version`) reflects in responses and tests
+- [ ]  using postman examples returns expected JSON
+- [ ]  passes all tests
+- [ ]  Changing the resolver reflects in responses and tests
 
 ## Troubleshooting
 - **Port already in use**: change `PORT` env var, e.g. `docker run -e PORT=5000 -p 5000:5000 graphql-testing`.
