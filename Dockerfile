@@ -4,9 +4,13 @@
 FROM node:20-alpine
 WORKDIR /app
 
+# Copy manifests first for better layer caching
 COPY package*.json ./
-RUN npm ci
 
+# Use npm install (no lockfile required). Installs devDependencies too (needed for tests).
+RUN npm install --no-audit --no-fund
+
+# Copy source code
 COPY src ./src
 COPY __tests__ ./__tests__
 
