@@ -1,0 +1,182 @@
+{
+  "info": {
+    "_postman_id": "525e952a-cd5a-41aa-b098-9643940e234b",
+    "name": "graphql-testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health: GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "text/plain"
+          }
+        ],
+        "url": "{{baseUrl}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Body mentions GraphQL path', function () {",
+              "  pm.expect(pm.response.text()).to.include('GraphQL is at /graphql');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL: hello",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\": \"{ hello }\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/graphql"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json().data;",
+              "pm.test('hello returns greeting', function(){ pm.expect(data.hello).to.eql('Hello, world!'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL: version",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\": \"{ version }\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/graphql"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json().data;",
+              "pm.test('version is a string', function(){ pm.expect(typeof data.version).to.eql('string'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL: ping",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\": \"{ ping }\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/graphql"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json().data;",
+              "pm.test('ping returns pong', function(){ pm.expect(data.ping).to.eql('pong'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL: add (variables)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\": \"mutation($a:Int!, $b:Int!){ add(a:$a, b:$b) }\", \"variables\": {\"a\": 3, \"b\": 4}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/graphql"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json().data;",
+              "pm.test('add returns 7', function(){ pm.expect(data.add).to.eql(7); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
