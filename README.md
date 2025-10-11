@@ -15,6 +15,7 @@ A tiny, **production-like** GraphQL service with **thorough tests** and **Docker
 ├── Dockerfile
 ├── docker-compose.yml
 ├── .dockerignore
+├── postman
 ├── package.json
 ├── README.md  
 ├── src
@@ -36,7 +37,7 @@ docker build -t graphql-testing .
 docker run --rm -p 4000:4000 graphql-testing
 
 # 3) Query it (in a second terminal)
-curl -X POST http://localhost:4000/graphql   -H 'Content-Type: application/json'   -d '{"query":"{ hello }"}'
+Use postman and import two files into postman
 
 # Expected JSON:
 # { "data": { "hello": "Hello, world!" } }
