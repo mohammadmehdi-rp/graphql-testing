@@ -5,8 +5,8 @@ A tiny, **production-like** GraphQL service with **thorough tests** and **Docker
 
 # Pull The Image And Run
 - docker pull rajabpourshirazy/graphql-testing:graphql-testing
-- docker run --rm -p 4000:4000 rajabpourshirazy/graphql-testing:graphql-testing
-- docker run --rm -p 4000:4000 rajabpourshirazy/graphql-testing:graphql-testing npm test
+- docker run --rm -p 4001:4001 rajabpourshirazy/graphql-testing:graphql-testing
+- docker run --rm -p 4001:4001 rajabpourshirazy/graphql-testing:graphql-testing npm test
 
 ## What you get
 - **GraphQL API** with one query and one mutation
@@ -38,8 +38,8 @@ A tiny, **production-like** GraphQL service with **thorough tests** and **Docker
 # 1) Build the image
 docker build -t graphql-testing .
 
-# 2) Run the server on port 4000
-docker run --rm -p 4000:4000 graphql-testing
+# 2) Run the server on port 4001
+docker run --rm -p 4001:4001 graphql-testing
 
 # 3) Query it 
 Use postman and import two files into postman
@@ -97,7 +97,7 @@ mutation($a: Int!, $b: Int!) {
 
 ## Verification checklist 
 - [ ] `docker build` succeeds without warnings
-- [ ] `docker run -p 4000:4000` serves `OK` at `/` and GraphQL at `/graphql`
+- [ ] `docker run -p 4001:4001` serves `OK` at `/` and GraphQL at `/graphql`
 - [ ]  using postman examples returns expected JSON
 - [ ]  passes all tests
 - [ ]  Changing the resolver reflects in responses and tests
@@ -158,10 +158,10 @@ test("ping returns pong", async () => {
 **Run & verify**
 ```diff
 docker build -t graphql-testing .
-docker run --rm -p 4000:4000 graphql-testing
+docker run --rm -p 4001:4001 graphql-testing
 
 # New query
-curl -X POST http://localhost:4000/graphql \
+curl -X POST http://localhost:4001/graphql \
   -H 'Content-Type: application/json' \
   -d '{"query":"{ ping }"}'
 # Expected: { "data": { "ping": "pong" } }

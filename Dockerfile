@@ -14,5 +14,5 @@ RUN npm install --no-audit --no-fund
 COPY src ./src
 COPY __tests__ ./__tests__
 
-EXPOSE 4000
+EXPOSE 4001
 CMD ["npm", "start"]

@@ -1,7 +1,7 @@
 
 import { createApp } from "./app.js";
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 
 const app = await createApp();
 app.listen(PORT, () => {
